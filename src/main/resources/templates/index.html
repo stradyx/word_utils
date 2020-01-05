@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>XMLHttpRequest上传文件</title>
+</head>
+<body>
+<progress id="progressBar" value="0" max="100" style="width: 300px;"></progress>
+<span id="percentage"></span><span id="time"></span>
+<br/><br/>
+<form id="uploadForm" enctype="multipart/form-data" method="post">
+    <input type="file" name="file">
+</form>
+<br>
+<input type="button" id="upload1" value="poi解析">
+<input type="button" id="upload2" value="aspose解析">
+<input type="button" id="download1" value="poi生成">
+<input type="button" id="download2" value="freemarker解析">
+<div id="test"></div>
+<script src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+        $('#upload1').click(function () {
+            upload("/preview/poi");
+        });
+        $('#upload2').click(function () {
+            upload("/preview/aspose");
+        });
+
+        function upload(url) {
+            var formData = new FormData($('#uploadForm')[0]);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+            }).success(function (data) {
+                $("#test").html(data);
+            }).error(function () {
+                alert("上传失败");
+            });
+        }
+
+        $('#download1').click(function () {
+            download("/download/poi");
+        });
+        $('#download2').click(function () {
+            download("/download/freemarker");
+        });
+
+        function download(url) {
+            var downloadForm = $("<form method='get'></form>");
+            downloadForm.attr("action", url);
+            $(document.body).append(downloadForm);
+            //提交表单，实现下载
+            downloadForm.submit();
+        }
+    });
+</script>
+</body>
+</html>
